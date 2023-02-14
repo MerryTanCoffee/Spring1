@@ -16,6 +16,7 @@
 	<bean id = "dataSource" class= "org.apache.commons.dbcp2.BasicDataSource" destroy-method="clone">
 		<property name="driverClassName" value = "oracle.jdbc.driver.OracleDriver"></property>
 		<property name="url" value = "jdbc:oracle:thin:@localhost:1521:xe"></property>
+		<property name="username" value="yse"></property>
 		<property name="password" value = "java"></property>
 	</bean>
 	
@@ -29,7 +30,7 @@
 	
 	<bean id = "sqlSessionFactory" class = "org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref = "dataSource"></property>
-		<property name="mapperLocations" ref = "classpath:/sqlmap/**/*_SQL.xml"></property>
+		<property name="mapperLocations" value = "classpath:/sqlmap/**/*_SQL.xml"></property>
 	</bean>
 	
 	<!-- 

@@ -2,11 +2,15 @@ package kr.or.ddit.book.web;
 
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import kr.or.ddit.book.service.IBookService;
 
 /*
  * @Controller 어노테이션이 있는 클래스는 스프링이 브라우저의 요청(request)을 받아들이는 컨트롤러라고 인지해서
@@ -16,6 +20,9 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/book")
 public class BookInsertController {
+	
+	@Inject
+	private IBookService bookService;
 	
 	/*
 	 * @RequestMapping
