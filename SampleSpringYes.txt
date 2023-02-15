@@ -1,0 +1,241 @@
+스프링 MVC 하루만에 배우기
+::  2023-02-15
+
+1. 필요한 프로그램 설치
+	- JDK 1.8 설정
+	- 이클립스 4.16(202006 R)
+	- Spring Tool Suite 3.9.14 RELEASE Plugin
+	- Apache-tomcat 8.5.x
+	
+이클립스 설치 후, 진행해야할 사항들
+1) enc 타입으로 인코딩 설정
+2) 본인이 원하는 font로 설정(옵션) ::: 개인적으로  consolar 설정ㅎ마
+3) perspective java-ee 설정(default)
+4) sts 플러그인 설치 
+	- help > eclipse maketplace
+	- spring tool 3 standalone edition 검색 후 install 진행
+	
+2. Book 게시판 프로젝트 설정하기
+
+	2-1) Spring Legacy Project 생성하기
+		- 프로젝트 명 : SampleSpringYse
+		- Spring MVC Project Template 선택
+		- 패키지명 : kr.or.ddit
+		
+	2-2) 프로젝트 환경 설정
+		- Java Build Path 설정
+			*** Built Path  3대장 설정
+			> JDK 1.8
+			> 메이븐
+			> Apache-Tomcat
+		- Java Facets 설정	
+		*** 이런 설정 부분은 내가 속해있는 팀 내에서 또는 회사 내에서 사용 중인 버전으로 설정
+		
+	2-3) 메이븐 자바 버전을 1.8로 변경			
+		- pom.xml 안에 java-version을 1.8로 변경
+		
+	2-4) 메이븐 스프링 버전을  5.3.25
+		- 메이븐 설정 후, MAVEN Clean / Maven Build를 진행한다.
+		 > Goals : compile 설정
+		- 스프링 5.3.25 버전은 JDK 1.8이 호환되는 버전이다.
+	
+	2-5) Apache-tomcat 설정
+		- SampleSpringYse 올리기
+		- Tomcat Overview timeout Start 120 설정
+		- Tomcat Module ContextPath	'/' 설정
+	
+	2-6) 인코딩 필터 설정
+		- 요청 (request)과 응답(response)을 모두 UTF-8로 고정하기 위해 인코딩 필터를 설정
+		- web.xml 설정(root 태그의 레벨을 debug로 설정)
+	
+	2-7) 로그 레벨 설정
+		- log4j.xml 설정(root태그의 레벨을  debug로 설정)
+		
+	2-8) 기존에 작성된 홈 컨트롤러, 뷰 삭제
+		- Controller, jsp 페이지 삭제
+				
+3. Book 게시판 만들기
+
+	3-1) 책 등록 컨트롤러 생성
+		- class BookInsertController  생성
+								
+	3-2) 책 등록 컨트롤러 메소드 생성
+		- public ModelAndView bookForm()
+								
+	3-3) 책 등록 화면 생성
+		- views/book/form.jsp
+								
+	3-4) 책 등록 화면 확인하기
+		> 서버 로드 시, 이상 있는지 없는지 확인하기
+		> 서버 로드 시 이상 있는 경우  xml 설정 부 확인 요망
+		> 페이지가 정확하게 load 되는지 단계별 검증
+		
+	3-5) 책 관리 데이터베이스 생성
+		- 계정 명  : yse / java	
+								
+	3-6) 책 관리 테이블 생성
+		create table book(
+			book_id number(8) not null,
+			title varchar2(200) not null,
+			category varchar2(200) default '' not null,
+			price number(8) null,
+			insert_date date default sysdate null,
+			constraint pk_book primary key (book_id)
+		);
+		create sequence seq_book increment by java start with 1 nocache;
+		
+	3-7) 메이븐 데이터 베이스 라이브러리 설정
+		- mybatis
+		- mybatis-spring
+		- spring-jdbc
+		- common-dbcp2
+		- log4jdbc-log4j2-jdbc4
+		- ojdbc8
+		*** 설정 후, Maven Build 또는 Maven의 Update Project 진행
+		
+	3-8) 데이터 소스 설정
+		- root-context.xml 설정
+		
+		**책 입력 만들기**										
+	
+	3-9) 책 입력 기능 쿼리 생성
+		- resources source package 아래에 sqlmap 폴더 생성
+		- book_SQL.xml 생성
+		- 책 입력 기능 쿼리 작성
+			<insert id = "insert" parameterType="hashMap" useGeneratedKeys="true"></insert>
+	
+	3-10) 책 입력 DAO 생성
+		- class BookDAO
+		- @Repository 어노테이션으로 데이터를 취급하는 빈이라 알린다.
+	
+	3-11) 책 입력 DAO 메소드 생성
+		- public int insert(@RequestParam Map<String,Object>map)
+	
+	3-12) 책 입력 service 인터페이스 메소드 생성
+		- interface IBookService
+		- public String insertBook(Map<String, Object>map)
+		
+	3-13) 책 입력  service 클래스 생성
+		- IBookService interface를 참조받은 구현체 클래스
+		- public String insertBook(Map<String,Object>map)
+		- @Service 어노테이션으로 비즈니스 로직을 담당하는 빈이라고 말한다.	
+	
+	3-14) 책 입력 컨트롤러 메소드 생성
+		- public ModelAndView insertBook(@RequestParam Map<String, Object>map)
+		- @Controller 어노테이션으로 컨트롤러를 담당하는 빈이라고 말함.
+	
+	3-15) 책 입력 화면을 출력하고 책 등록 확인하기
+		- 결과 404 에러 발생
+			> 등록 화면에서 등록은 이루어지나, 등록 후 돌아갈 페이지가 연동되어 있지 않아 에러 발생(정상)		
+			
+		
+		** 책 상세보기 만들기 **
+		
+	3-16) 책 상세보기 기능 쿼리 생성
+		- 책 상세 기능 쿼리 작성
+		- <select id = "selectBook" parameterType="hashMap" resultType="hashMap"></select>
+		
+	3-17) 책 상세보기 DAO 메소드 생성
+		- public Map<String,Object> selectBook(Map<String,Object> map)
+	
+	3-18) 책 상세보기 Service 인터페이스 메소드 생성
+		- public Map<String,Object> selectBook(Map<String,Object> map)	 		
+	
+	3-19) 책 상세보기 Service 클래스 메소드 생성	 		
+		- public Map<String,Object> selectBook(Map<String,Object> map)	 		
+	
+	3-20) 책 상세 화면 생성	 		
+		- views/book/detail.jsp
+	
+	3-21) 책 상세보기 화면을 출력하고 책 상세보기 확인하기
+	
+		** 책 수정 만들기 **
+		
+			 		
+	3-22) 책 수정 화면 컨트롤러 메소드 생성
+		- public ModelAndView update(@RequestParam Map<String,Object> map)	 		
+					
+	3-23) 책 수정 화면 뷰 생성
+		-views/book/update.jsp			
+
+	3-24) 책 수정 화면 확인하기			
+	
+	3-25) 책 수정 기능 쿼리 생성			
+		     책 수정 기능 쿼리 작성			
+		- <update id = "update" parameterType="hashMap"></update>
+	
+	3-26) 책 수정 기능 DAO 메소드 생성
+		- public int update(Map<String,Object> map)
+					
+	3-27) 책 수정 기능 Service 인터페이스 메소드 생성
+		- public boolean updateBook(Map<String,Object> map)
+					
+	3-28) 책 수정 기능ㄴ Service 클래스 메소드 생성
+		- public boolean updateBook(Map<String,Object> map)
+					
+	3-29) 책 수정 기능 컨트롤러 메소드 생성	
+		- public ModelAndView update(@RequestParam Map<String,Object> map)	 		
+	
+	3-30) 책 수정 기능 확인하기
+		- 책 수정 기능 > 책 상세보기
+		
+		** 책 삭제 만들기 **				
+		
+	3-31) 책 삭제 기능 쿼리 생성
+		- 책 삭제 기능 쿼리 작성
+		- <delete id = "delete" parameterType="hashMap"></delete>
+	
+	3-32) 책 삭제 기능 DAO 메소드 작성
+		- public int delete(Map<String, Object> map)
+					
+	3-33) 책 삭제 기능 Sevice 인터페이스 메소드 작성
+		- public boolean removeBook(Map<String, Object> map)
+		
+	3-34) 책 삭제 기능 Sevice 클래스 메소드 작성
+		- public boolean removeBook(Map<String, Object> map)
+		
+	3-35) 책 삭제 기능  컨트롤러 메소드 작성
+		- public ModelAndView deleteBook(@RequestParam Map<String,Object> map)	 		
+		
+	3-36) 책 삭제 기능 확인하기
+		- 책 삭제 기능 > 책 목록
+		
+		** 책 목록 만들기 **
+			
+	3-37) 책 목록 기능 쿼리 생성
+		- 책 목록 기능 쿼리 작성
+		- <slelect id = "selectBookList" parameterType="hasMap" resultType="hashMap">
+			
+	3-38) 책 목록 기능 DAO 메소드 생성
+		- List <Map<String, Object>> selectList(Map<String, Object> map)
+		
+	3-39) 책 목록 기능 Service 인터페이스 메소드 생성
+		- List <Map<String, Object>> selectList(Map<String, Object> map)
+		 
+	3-40) 책 목록 기능 Service 클래스 메소드 생성
+		- List <Map<String, Object>> selectList(Map<String, Object> map)
+
+	3-41) 책 목록 기능 컨트롤러 메소드 생성 
+		- public ModelAndView list(@RequestParam Map<String,Object> map)	 		
+	
+	3-42) 책 목록 화면 뷰 생성
+		- views/book/list.jsp
+	
+	3-43) 책 목록 기능 확인하기
+	
+		** 책 검색 만들기 **
+		
+	3-44) 책 검색 기능 쿼리 생성
+		- <select id = "selectBookList" parameterType="hashMap" resultType="hashMap">
+		- 목록 쿼리에 동적 검색 쿼리 추가
+	
+	3-45) 책 검색 기능 컨트롤러 메소드 수정
+		- public ModelAndView list(@RequestParam Map<String,Object> map)	 		
+		- 검색 키워드 포함 여부에 따른 list.jsp 페이지로의 키워드 전달 추가
+				 
+	3-46) 책 검색 화면 뷰 수정
+		- views/book/list.jsp 수정
+		
+	3-47) 책 검색 기능 확인하기			 
+	3-45)		 
+	3-45)		 

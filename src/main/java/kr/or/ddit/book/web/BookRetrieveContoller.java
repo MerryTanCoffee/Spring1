@@ -21,11 +21,21 @@ public class BookRetrieveContoller {
 	private IBookService bookService;
 	
 	@RequestMapping(value="/list.do", method=RequestMethod.GET)
-	public ModelAndView list() {
-		List<Map<String,Object>> bookList = bookService.selectBookList();
+	public ModelAndView list(@RequestParam Map<String,Object> map) {
+		List<Map<String,Object>> bookList = bookService.selectBookList(map);
 		
 		ModelAndView mav = new ModelAndView();
 		mav.addObject("bookList",bookList);
+		
+		// 검색 기능 추가
+		// 목록 페이지에서는 keyword가 HTTP 파라미터가 있을 수도 있고 없을 수도 있다.
+		// list.jsp에서 keyword 키에 키워드를 담아서 보냈을 때, 받는 파라미터  map에는
+		// keyword라는 키로 값이 담겨 있을테니, map.containsKey 함수를 통해
+		// keyword라는 키의 포함 여부를 확인하여 검색을 했는지 판단한다.
+		if(map.containsKey("keyword")) {
+			// 파라미터가 있다면 뷰에 keyword를 전달한다.
+			mav.addObject("keyword", map.get("keyword"));
+		}
 		mav.setViewName("book/list");
 		return mav;
 	}

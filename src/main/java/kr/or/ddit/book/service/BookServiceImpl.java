@@ -31,6 +31,13 @@ public class BookServiceImpl implements IBookService {
 	// 데이터베이스와 통신을 담당하는 객체
 	// 클래스로 존재하거나 어딘가에 인스턴스로 존재해야한다.
 	
+	/**
+	 * <p>책 등록</p>
+	 * @since SampleSpringYse 1.0
+	 * @author ddit_june
+	 * @param map 등록할 책 데이터
+	 * @return 성공, 책 ID 실패 , null 
+	 */
 	public String insertBook(Map<String, Object> map) {
 		
 		int affectRowCount = bookDao.insertBook(map);
@@ -42,6 +49,14 @@ public class BookServiceImpl implements IBookService {
 	}
 
 
+	
+	/**
+	 * <p>책 상세보기</p>
+	 * @since SampleSpringYse 1.0
+	 * @author PC-06
+	 * @param map 책 ID
+	 * @return ID에 해당하는 책 정보
+	 */
 	@Override
 	public Map<String, Object> selectBook(Map<String, Object> map) {
 		
@@ -50,6 +65,13 @@ public class BookServiceImpl implements IBookService {
 		return bookDao.selectBook(map);
 	}
 
+	/**
+	 * <p>책 수정</p>
+	 * @since SampleSpringYse 1.0
+	 * @author PC-06
+	 * @param map 책 ID
+	 * @return 성공1, 실패0
+	 */
 
 	@Override
 	public boolean updateBook(Map<String, Object> map) {
@@ -61,6 +83,13 @@ public class BookServiceImpl implements IBookService {
 	}
 
 
+	/**
+	 * <p>책 삭제</p>
+	 * @since SampleSpringYse 1.0
+	 * @author PC-06
+	 * @param map 책 ID
+	 * @return 성공1, 실패0
+	 */
 	@Override
 	public boolean removeBook(Map<String, Object> map) {
 	
@@ -70,9 +99,16 @@ public class BookServiceImpl implements IBookService {
 	}
 
 
+	/**
+	 * <p></p>
+	 * @since SampleSpringYse 1.0
+	 * @author PC-06
+	 * @param map 책 키워드
+	 * @return 성공 리스트(책s), 실패 null
+	 */
 	@Override
-	public List<Map<String, Object>> selectBookList() {
-		return bookDao.selectList();
+	public List<Map<String, Object>> selectBookList(Map<String, Object> map) {
+		return bookDao.selectList(map);
 	}
 
 }

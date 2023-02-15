@@ -23,7 +23,7 @@
 						<form>
 							<div class="row">
 								<div class="col-md-10">
-									<input type="text" placeholder="검색" class="form-control" name=""/>
+									<input type="text" placeholder="검색" class="form-control" name="keyword" value="${keyword}"/>
 								</div>
 								<div class="col-md-2">
 									<input type="submit" class="btn btn-secondary" value="검색"/>

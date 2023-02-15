@@ -75,7 +75,7 @@ public class BookDAOImpl {
 	   return sqlSessionTemplate.delete("Book.delete", map);
    }
    
-   public List<Map <String,Object>> selectList(){
-	   return sqlSessionTemplate.selectList("Book.selectBookList");
+   public List<Map <String,Object>> selectList(Map<String, Object> map){
+	   return sqlSessionTemplate.selectList("Book.selectBookList",map);
    }
 }
