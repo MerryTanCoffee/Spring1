@@ -24,7 +24,7 @@
 		
 	2-2) 프로젝트 환경 설정
 		- Java Build Path 설정
-			*** Built Path  3대장 설정
+			*** Build Path  3대장 설정
 			> JDK 1.8
 			> 메이븐
 			> Apache-Tomcat
@@ -35,7 +35,7 @@
 		- pom.xml 안에 java-version을 1.8로 변경
 		
 	2-4) 메이븐 스프링 버전을  5.3.25
-		- 메이븐 설정 후, MAVEN Clean / Maven Build를 진행한다.
+		- 메이븐 설정 후, Maven Clean / Maven Build를 진행한다.
 		 > Goals : compile 설정
 		- 스프링 5.3.25 버전은 JDK 1.8이 호환되는 버전이다.
 	
